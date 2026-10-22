@@ -430,8 +430,18 @@ export default function DetailScreen({ bookId, onBack }) {
 
                 <View style={styles.detailRow}>
                   <Text style={styles.detailLabel}>Status:</Text>
-                  <View style={styles.statusTag}>
-                    <Text style={styles.statusTagText}>{book.status}</Text>
+                  <View style={[
+                    styles.statusTag,
+                    book.status === 'To Read' && styles.statusToRead,
+                    book.status === 'Reading' && styles.statusReading,
+                    book.status === 'Finished' && styles.statusFinished,
+                  ]}>
+                    <Text style={[
+                      styles.statusTagText,
+                      book.status === 'To Read' && styles.statusToReadText,
+                      book.status === 'Reading' && styles.statusReadingText,
+                      book.status === 'Finished' && styles.statusFinishedText,
+                    ]}>{book.status}</Text>
                   </View>
                 </View>
 
@@ -678,6 +688,33 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: theme.colors.textSecondary,
+  },
+  statusToRead: {
+    backgroundColor: '#E0F2FE',
+    borderColor: '#BAE6FD',
+    borderWidth: 1,
+  },
+  statusToReadText: {
+    color: '#0284C7',
+    fontWeight: '700',
+  },
+  statusReading: {
+    backgroundColor: '#DBEAFE',
+    borderColor: '#BFDBFE',
+    borderWidth: 1,
+  },
+  statusReadingText: {
+    color: '#1D4ED8',
+    fontWeight: '700',
+  },
+  statusFinished: {
+    backgroundColor: '#CCFBF1',
+    borderColor: '#99F6E4',
+    borderWidth: 1,
+  },
+  statusFinishedText: {
+    color: '#0F766E',
+    fontWeight: '700',
   },
   notesContainer: {
     marginTop: theme.spacing.xs,

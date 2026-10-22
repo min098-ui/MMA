@@ -1,21 +1,35 @@
 export const theme = {
   colors: {
-    primary: '#4F46E5',
-    primaryDark: '#4338CA',
-    primaryLight: '#EEF2FF',
-    accent: '#F59E0B',
-    star: '#F59E0B',
-    background: '#F8FAFC',
-    card: '#FFFFFF',
-    text: '#0F172A',
-    textSecondary: '#64748B',
-    textMuted: '#94A3B8',
-    border: '#E2E8F0',
-    borderFocus: '#6366F1',
-    success: '#10B981',
+    // 3 tông xanh biển chủ đạo (Deep Navy - Vibrant Ocean - Soft Sky)
+    primaryDark: '#0369A1',      // Xanh biển đậm (Header, Primary buttons active, titles)
+    primary: '#0284C7',          // Xanh biển tươi (Buttons, active tabs, accents)
+    primaryLight: '#E0F2FE',     // Xanh biển nhạt (Tags, card highlights, badges)
+    primaryLighter: '#F0F9FF',   // Xanh biển băng tuyết (Background toàn app)
+    
+    // Màu phụ trợ
+    accent: '#38BDF8',           // Xanh Cyan biển sáng
+    star: '#F59E0B',             // Sao vàng gold nổi bật trên nền xanh
+    background: '#F0F9FF',       // Nền full xanh biển nhạt dịu mắt
+    card: '#FFFFFF',             // Nền card trắng tinh tế
+    text: '#0C4A6E',             // Chữ xanh biển đậm dễ đọc
+    textSecondary: '#0369A1',    // Chữ phụ xanh biển vừa
+    textMuted: '#64748B',        // Chữ gợi ý mờ
+    border: '#BAE6FD',           // Viền xanh biển trang nhã
+    borderFocus: '#0284C7',      // Viền khi focus
+    
+    // 3 màu trạng thái xanh biển phân biệt cho 3 Status
+    statusToRead: '#0284C7',     // To Read: Xanh biển tươi
+    statusToReadBg: '#E0F2FE',
+    statusReading: '#2563EB',    // Reading: Xanh dương đậm
+    statusReadingBg: '#DBEAFE',
+    statusFinished: '#0D9488',   // Finished: Xanh ngọc biển (Teal)
+    statusFinishedBg: '#CCFBF1',
+
+    // Thông báo
+    success: '#059669',
     successBg: '#ECFDF5',
     successBorder: '#A7F3D0',
-    error: '#EF4444',
+    error: '#DC2626',
     errorBg: '#FEF2F2',
     errorBorder: '#FECACA',
     danger: '#DC2626',
@@ -30,35 +44,9 @@ export const theme = {
     xxl: 24,
   },
   borderRadius: {
-    sm: 6,
-    md: 10,
-    lg: 14,
+    sm: 8,
+    md: 12,
+    lg: 16,
     full: 9999,
-  },
-  typography: {
-    title: {
-      fontSize: 24,
-      fontWeight: '700',
-      color: '#0F172A',
-    },
-    subtitle: {
-      fontSize: 18,
-      fontWeight: '600',
-      color: '#1E293B',
-    },
-    body: {
-      fontSize: 14,
-      color: '#334155',
-    },
-    caption: {
-      fontSize: 12,
-      color: '#64748B',
-    },
-    label: {
-      fontSize: 13,
-      fontWeight: '600',
-      color: '#334155',
-      marginBottom: 4,
-    },
   },
 };
