@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidBook(data) {
+      return data.userId == request.auth.uid
+        && data.title is string
+        && data.title.trim().size() > 0
+        && data.title.size() <= 100
+        && data.author is string
+        && data.author.trim().size() > 0
+        && data.author.size() <= 60
+        && (data.genre in ['Fiction', 'Non-Fiction', 'Academic', 'Other'])
+        && (data.status in ['To Read', 'Reading', 'Finished'])
+        && (!('rating' in data) || data.rating == null || (data.rating is int && data.rating >= 0 && data.rating <= 5))
+        && (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 300))
+        && (!('favorite' in data) || data.favorite is bool);
+    }
+
+    match /books/{bookId} {
+      // Logged in person can see only their own rows
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Add a book: only if logged in, userId matches auth.uid, and data passes validation
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && isValidBook(request.resource.data);
+
+      // Change book: only if logged in, owns the row, userId cannot be reassigned, and data passes validation
+      allow update: if isAuthenticated()
+                    && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == resource.data.userId
+                    && isValidBook(request.resource.data);
+
+      // Delete book: only if logged in and owns the row
+      allow delete: if isAuthenticated()
+                    && resource.data.userId == request.auth.uid;
+    }
+  }
+}
