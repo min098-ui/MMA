@@ -99,9 +99,6 @@ export default function LoginScreen({ onNavigate }) {
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.card}>
         <View style={styles.headerArea}>
-          <View style={styles.cloudBadge}>
-            <Text style={styles.cloudBadgeText}>☁️  LÀNG MÂY BOOKSHELF</Text>
-          </View>
           <Text style={styles.title}>Welcome Back</Text>
           <Text style={styles.subtitle}>Sign in to your BookShelf account</Text>
         </View>

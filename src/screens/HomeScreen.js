@@ -33,10 +33,6 @@ export default function HomeScreen({ onNavigate }) {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* HERO SECTION */}
         <View style={styles.heroCard}>
-          <View style={styles.cloudBadge}>
-            <Text style={styles.cloudBadgeText}>☁️  LÀNG MÂY BOOKSHELF</Text>
-          </View>
-
           <Text testID="home-title" style={styles.heroTitle}>
             BookShelf
           </Text>

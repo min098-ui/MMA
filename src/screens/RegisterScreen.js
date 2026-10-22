@@ -138,9 +138,6 @@ export default function RegisterScreen({ onNavigate }) {
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.card}>
         <View style={styles.headerArea}>
-          <View style={styles.cloudBadge}>
-            <Text style={styles.cloudBadgeText}>☁️  LÀNG MÂY BOOKSHELF</Text>
-          </View>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Join BookShelf to start organizing your books</Text>
         </View>

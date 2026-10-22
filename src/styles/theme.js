@@ -1,7 +1,7 @@
 export const theme = {
   colors: {
-    // Tông màu Làng Mây (Cloud Blue & Sky Aesthetic)
-    primary: '#0EA5E9',          // Xanh bầu trời trong vắt (Vibrant Sky Blue như trên hình mẫu)
+    // Cloud Blue & Sky Aesthetic Theme
+    primary: '#0EA5E9',          // Vibrant Sky Blue
     primaryDark: '#0284C7',      // Xanh mây sâu (Deep Sky Blue)
     primaryLight: '#E0F2FE',     // Ánh mây nhạt bồng bềnh (Soft Cloud Tint)
     primaryLighter: '#F8FAFC',   // Trắng sương mây (Airy Cloud White)
