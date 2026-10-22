@@ -36,7 +36,7 @@ function MainApp() {
     if (loggedOutScreen === 'Login') {
       return (
         <SafeAreaView style={styles.safeArea}>
-          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+          <StatusBar barStyle="dark-content" backgroundColor={theme.colors.card} />
           <LoginScreen onNavigate={(screen) => setLoggedOutScreen(screen)} />
         </SafeAreaView>
       );
@@ -45,7 +45,7 @@ function MainApp() {
     if (loggedOutScreen === 'Register') {
       return (
         <SafeAreaView style={styles.safeArea}>
-          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+          <StatusBar barStyle="dark-content" backgroundColor={theme.colors.card} />
           <RegisterScreen onNavigate={(screen) => setLoggedOutScreen(screen)} />
         </SafeAreaView>
       );
@@ -53,7 +53,7 @@ function MainApp() {
 
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <StatusBar barStyle="dark-content" backgroundColor={theme.colors.card} />
         <HomeScreen onNavigate={(screen) => setLoggedOutScreen(screen)} />
       </SafeAreaView>
     );
@@ -63,7 +63,7 @@ function MainApp() {
   if (loggedInScreen === 'Detail' && selectedBookId) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <StatusBar barStyle="dark-content" backgroundColor={theme.colors.card} />
         <DetailScreen 
           bookId={selectedBookId} 
           onBack={() => {
@@ -77,7 +77,7 @@ function MainApp() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.card} />
       <ListScreen 
         onNavigate={(screen) => setLoggedInScreen(screen)} 
         onSelectBook={(bookId) => {
@@ -102,7 +102,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.card,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   loadingContainer: {

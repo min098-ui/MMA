@@ -13,6 +13,7 @@ import { theme } from '../styles/theme';
 
 export default function RegisterScreen({ onNavigate }) {
   const { register } = useAuth();
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -136,8 +137,13 @@ export default function RegisterScreen({ onNavigate }) {
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.card}>
-        <Text style={styles.title}>Register</Text>
-        <Text style={styles.subtitle}>Create your private BookShelf account</Text>
+        <View style={styles.headerArea}>
+          <View style={styles.cloudBadge}>
+            <Text style={styles.cloudBadgeText}>☁️  LÀNG MÂY BOOKSHELF</Text>
+          </View>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Join BookShelf to start organizing your books</Text>
+        </View>
 
         {successMessage ? (
           <View style={styles.successBox}>
@@ -155,14 +161,28 @@ export default function RegisterScreen({ onNavigate }) {
           </View>
         ) : null}
 
+        {/* FULL NAME */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.inputLabelHeader}>FULL NAME</Text>
+          <TextInput
+            style={styles.input}
+            value={fullName}
+            onChangeText={setFullName}
+            placeholder="John Doe"
+            placeholderTextColor="#94A3B8"
+            autoCorrect={false}
+          />
+        </View>
+
+        {/* EMAIL ADDRESS */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabelHeader}>EMAIL ADDRESS</Text>
           <TextInput
             style={[styles.input, errors.email ? styles.inputError : null]}
             value={email}
             onChangeText={handleEmailChange}
             placeholder="you@example.com"
-            placeholderTextColor={theme.colors.textMuted}
+            placeholderTextColor="#94A3B8"
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -172,14 +192,18 @@ export default function RegisterScreen({ onNavigate }) {
           ) : null}
         </View>
 
+        {/* PASSWORD with Min. 6 characters */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Password</Text>
+          <View style={styles.labelRow}>
+            <Text style={styles.inputLabelHeader}>PASSWORD</Text>
+            <Text style={styles.minCharsText}>Min. 6 characters</Text>
+          </View>
           <TextInput
             style={[styles.input, errors.password ? styles.inputError : null]}
             value={password}
             onChangeText={handlePasswordChange}
-            placeholder="At least 6 characters"
-            placeholderTextColor={theme.colors.textMuted}
+            placeholder="••••••••"
+            placeholderTextColor="#94A3B8"
             secureTextEntry
           />
           {errors.password ? (
@@ -187,14 +211,15 @@ export default function RegisterScreen({ onNavigate }) {
           ) : null}
         </View>
 
+        {/* CONFIRM PASSWORD */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Confirm Password</Text>
+          <Text style={styles.inputLabelHeader}>CONFIRM PASSWORD</Text>
           <TextInput
             style={[styles.input, errors.confirmPassword ? styles.inputError : null]}
             value={confirmPassword}
             onChangeText={handleConfirmPasswordChange}
-            placeholder="Repeat your password"
-            placeholderTextColor={theme.colors.textMuted}
+            placeholder="••••••••"
+            placeholderTextColor="#94A3B8"
             secureTextEntry
           />
           {errors.confirmPassword ? (
@@ -202,23 +227,27 @@ export default function RegisterScreen({ onNavigate }) {
           ) : null}
         </View>
 
+        {/* CREATE ACCOUNT BUTTON */}
         <TouchableOpacity 
           style={styles.submitButton} 
           onPress={handleSubmit} 
           disabled={loading}
-          activeOpacity={0.8}
+          activeOpacity={0.85}
         >
           {loading ? (
-            <ActivityIndicator color={theme.colors.white} />
+            <ActivityIndicator color="#FFFFFF" />
           ) : (
-            <Text style={styles.submitButtonText}>Register</Text>
+            <View style={styles.buttonContent}>
+              <Text style={styles.submitButtonText}>Create Account  →</Text>
+            </View>
           )}
         </TouchableOpacity>
 
+        {/* FOOTER */}
         <View style={styles.footerRow}>
           <Text style={styles.footerText}>Already have an account? </Text>
           <TouchableOpacity onPress={() => onNavigate('Login')}>
-            <Text style={styles.linkText}>Login here</Text>
+            <Text style={styles.linkText}>Sign in</Text>
           </TouchableOpacity>
         </View>
 
@@ -236,121 +265,168 @@ export default function RegisterScreen({ onNavigate }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: '#F8FAFC',
     justifyContent: 'center',
     padding: theme.spacing.lg,
   },
   card: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.xl,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
     elevation: 3,
   },
-  title: {
-    fontSize: 24,
+  headerArea: {
+    marginBottom: 20,
+  },
+  cloudBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#E0F2FE',
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 9999,
+    marginBottom: 10,
+  },
+  cloudBadgeText: {
+    fontSize: 10,
     fontWeight: '800',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
+    color: '#0284C7',
+    letterSpacing: 0.6,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: 4,
+    letterSpacing: -0.4,
   },
   subtitle: {
     fontSize: 14,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.xl,
+    color: '#64748B',
+    fontWeight: '500',
   },
   successBox: {
-    backgroundColor: theme.colors.successBg,
-    borderColor: theme.colors.successBorder,
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
     borderWidth: 1,
     padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: 12,
     marginBottom: theme.spacing.lg,
   },
   successText: {
-    color: theme.colors.success,
+    color: '#059669',
     fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
   errorBox: {
-    backgroundColor: theme.colors.errorBg,
-    borderColor: theme.colors.errorBorder,
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
     borderWidth: 1,
     padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: 12,
     marginBottom: theme.spacing.lg,
   },
   authErrorText: {
-    color: theme.colors.error,
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  inputGroup: {
-    marginBottom: theme.spacing.lg,
-  },
-  label: {
+    color: '#E11D48',
     fontSize: 13,
     fontWeight: '600',
-    color: theme.colors.text,
-    marginBottom: 6,
+  },
+  inputGroup: {
+    marginBottom: 18,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  inputLabelHeader: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#475569',
+    letterSpacing: 0.6,
+    marginBottom: 8,
+  },
+  minCharsText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748B',
   },
   input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     fontSize: 15,
-    color: theme.colors.text,
-    backgroundColor: '#FAFAFA',
+    color: '#1E293B',
+    backgroundColor: '#FFFFFF',
   },
   inputError: {
-    borderColor: theme.colors.error,
-    backgroundColor: theme.colors.errorBg,
+    borderColor: '#E11D48',
+    backgroundColor: '#FFF1F2',
   },
   fieldError: {
-    color: theme.colors.error,
+    color: '#E11D48',
     fontSize: 12,
     marginTop: 4,
+    fontWeight: '600',
   },
   submitButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.sm,
-    paddingVertical: 14,
+    backgroundColor: '#0EA5E9',
+    borderRadius: 14,
+    paddingVertical: 16,
     alignItems: 'center',
-    marginTop: theme.spacing.sm,
+    justifyContent: 'center',
+    marginTop: 6,
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   submitButtonText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
   footerRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: theme.spacing.xl,
+    marginTop: 22,
   },
   footerText: {
     fontSize: 14,
-    color: theme.colors.textSecondary,
+    color: '#64748B',
+    fontWeight: '500',
   },
   linkText: {
     fontSize: 14,
-    fontWeight: '700',
-    color: theme.colors.primary,
+    fontWeight: '800',
+    color: '#0EA5E9',
   },
   backButton: {
     alignItems: 'center',
-    marginTop: theme.spacing.lg,
+    marginTop: 18,
   },
   backButtonText: {
     fontSize: 13,
-    color: theme.colors.textSecondary,
+    fontWeight: '600',
+    color: '#64748B',
   },
 });

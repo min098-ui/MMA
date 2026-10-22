@@ -31,38 +31,51 @@ export default function HomeScreen({ onNavigate }) {
       />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.heroSection}>
+        {/* HERO SECTION */}
+        <View style={styles.heroCard}>
+          <View style={styles.cloudBadge}>
+            <Text style={styles.cloudBadgeText}>☁️  LÀNG MÂY BOOKSHELF</Text>
+          </View>
+
           <Text testID="home-title" style={styles.heroTitle}>
             BookShelf
           </Text>
+
           <Text style={styles.heroSubtitle}>
-            Your personal digital bookshelf. Track what you own, record what you want to read, and organize your favorite books all in one clean place.
+            Your personal digital bookshelf in a calm, modern cloud aesthetic. Organize, track, and enjoy your reading journey with ease.
           </Text>
 
           <View style={styles.heroActionButtons}>
             <TouchableOpacity 
               style={styles.primaryActionButton}
               onPress={() => onNavigate('Login')}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
             >
-              <Text style={styles.primaryActionText}>Get Started / Sign In</Text>
+              <Text style={styles.primaryActionText}>Sign In  →</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={styles.secondaryActionButton}
               onPress={() => onNavigate('Register')}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
             >
               <Text style={styles.secondaryActionText}>Create Account</Text>
             </TouchableOpacity>
           </View>
         </View>
 
+        {/* FEATURES SECTION */}
         <View style={styles.featuresSection}>
-          <Text style={styles.sectionHeading}>Features</Text>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionHeading}>KEY FEATURES</Text>
+            <View style={styles.headingLine} />
+          </View>
+
           {features.map((feature, index) => (
             <View key={index} style={styles.card}>
-              <Text style={styles.cardIcon}>{feature.icon}</Text>
+              <View style={styles.iconCircle}>
+                <Text style={styles.cardIcon}>{feature.icon}</Text>
+              </View>
               <View style={styles.cardTextContainer}>
                 <Text style={styles.cardTitle}>{feature.title}</Text>
                 <Text style={styles.cardDescription}>{feature.description}</Text>
@@ -78,103 +91,156 @@ export default function HomeScreen({ onNavigate }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: '#F8FAFC',
   },
   content: {
-    padding: theme.spacing.lg,
+    padding: 16,
     paddingBottom: 40,
   },
-  heroSection: {
+  heroCard: {
     alignItems: 'center',
-    marginVertical: theme.spacing.xl,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.lg,
+    marginVertical: 12,
+    padding: 24,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 4,
+  },
+  cloudBadge: {
+    backgroundColor: '#E0F2FE',
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderColor: '#BAE6FD',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 9999,
+    marginBottom: 14,
+  },
+  cloudBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#0284C7',
+    letterSpacing: 0.8,
   },
   heroTitle: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: theme.colors.primary,
-    marginBottom: theme.spacing.sm,
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#0EA5E9',
+    marginBottom: 8,
     textAlign: 'center',
+    letterSpacing: -0.6,
   },
   heroSubtitle: {
     fontSize: 15,
-    color: theme.colors.textSecondary,
+    color: '#475569',
     textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: theme.spacing.xl,
+    lineHeight: 23,
+    marginBottom: 24,
+    fontWeight: '500',
+    paddingHorizontal: 8,
   },
   heroActionButtons: {
     width: '100%',
-    gap: theme.spacing.md,
+    gap: 12,
   },
   primaryActionButton: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 14,
-    borderRadius: theme.borderRadius.md,
+    backgroundColor: '#0EA5E9',
+    paddingVertical: 16,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
   },
   primaryActionText: {
-    color: theme.colors.white,
-    fontSize: 15,
-    fontWeight: '700',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
   secondaryActionButton: {
-    backgroundColor: theme.colors.white,
-    paddingVertical: 14,
-    borderRadius: theme.borderRadius.md,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 16,
+    borderRadius: 14,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   secondaryActionText: {
-    color: theme.colors.text,
+    color: '#0EA5E9',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '800',
   },
   featuresSection: {
-    marginTop: theme.spacing.md,
-    gap: theme.spacing.md,
+    marginTop: 12,
+    gap: 12,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+    marginTop: 4,
   },
   sectionHeading: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#64748B',
+    letterSpacing: 0.8,
+  },
+  headingLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E2E8F0',
+    marginLeft: 12,
   },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.card,
-    padding: theme.spacing.lg,
-    borderRadius: theme.borderRadius.md,
+    backgroundColor: '#FFFFFF',
+    padding: 18,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    shadowColor: '#64748B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 12,
+    elevation: 2,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#F0F9FF',
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: '#BAE6FD',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
   },
   cardIcon: {
-    fontSize: 28,
-    marginRight: theme.spacing.md,
+    fontSize: 22,
   },
   cardTextContainer: {
     flex: 1,
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: 4,
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: 3,
   },
   cardDescription: {
     fontSize: 13,
-    color: theme.colors.textSecondary,
-    lineHeight: 18,
+    color: '#64748B',
+    lineHeight: 19,
+    fontWeight: '500',
   },
 });

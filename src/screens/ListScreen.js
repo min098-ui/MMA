@@ -6,9 +6,9 @@ import {
   TouchableOpacity, 
   StyleSheet, 
   ScrollView, 
-  Switch,
-  ActivityIndicator,
-  Modal
+  Switch, 
+  ActivityIndicator, 
+  Modal 
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useBooks } from '../context/BookContext';
@@ -217,7 +217,6 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
       setFormErrors({});
       setBookSuccess('Book added');
     } catch (err) {
-      // Show exact message in error-book
       setBookError(err.message || 'Error saving book to Firestore');
     } finally {
       setIsSubmitting(false);
@@ -242,7 +241,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
         return false;
       }
 
-      // Search box: keeps only books whose title or author contains the typed text (not case-sensitive, spaces at both ends ignored)
+      // Search box: keeps only books whose title or author contains the typed text
       if (searchText.trim() !== '') {
         const query = searchText.trim().toLowerCase();
         const titleMatch = (book.title || '').toLowerCase().includes(query);
@@ -269,7 +268,6 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
     const totalCount = filteredBooks.length;
     const favCount = filteredBooks.filter((b) => b.favorite).length;
 
-    // Breakdown with one row per status that appears, status with most books first (equal counts: To Read, Reading, Finished)
     const counts = {
       'To Read': 0,
       'Reading': 0,
@@ -292,7 +290,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
       }))
       .sort((a, b) => {
         if (b.count !== a.count) {
-          return b.count - a.count; // most books first
+          return b.count - a.count;
         }
         return (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
       });
@@ -315,7 +313,12 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
         
         {/* ADD A BOOK SECTION */}
         <View testID="book-form" style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Add a book</Text>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Add a book</Text>
+            <View style={styles.sectionCloudBadge}>
+              <Text style={styles.sectionCloudBadgeText}>☁️ NEW</Text>
+            </View>
+          </View>
           
           {bookSuccess ? (
             <View style={styles.successBox}>
@@ -335,13 +338,13 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 
           {/* Title */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Title *</Text>
+            <Text style={styles.inputLabelHeader}>TITLE *</Text>
             <TextInput
               style={[styles.input, formErrors.title ? styles.inputError : null]}
               value={title}
               onChangeText={handleTitleChange}
               placeholder="e.g. Dune"
-              placeholderTextColor={theme.colors.textMuted}
+              placeholderTextColor="#94A3B8"
             />
             {formErrors.title ? (
               <Text style={styles.fieldError}>{formErrors.title}</Text>
@@ -350,13 +353,13 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 
           {/* Author */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Author *</Text>
+            <Text style={styles.inputLabelHeader}>AUTHOR *</Text>
             <TextInput
               style={[styles.input, formErrors.author ? styles.inputError : null]}
               value={author}
               onChangeText={handleAuthorChange}
               placeholder="e.g. Frank Herbert"
-              placeholderTextColor={theme.colors.textMuted}
+              placeholderTextColor="#94A3B8"
             />
             {formErrors.author ? (
               <Text style={styles.fieldError}>{formErrors.author}</Text>
@@ -365,7 +368,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 
           {/* Genre picker */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Genre *</Text>
+            <Text style={styles.inputLabelHeader}>GENRE *</Text>
             <TouchableOpacity 
               style={[styles.pickerButton, formErrors.genre ? styles.inputError : null]}
               onPress={() => setShowGenrePicker(true)}
@@ -374,7 +377,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
               <Text style={genre ? styles.pickerValueText : styles.pickerPlaceholderText}>
                 {genre || 'Choose genre'}
               </Text>
-              <Text style={styles.pickerArrow}>▼</Text>
+              <Text style={styles.pickerArrow}>▾</Text>
             </TouchableOpacity>
             {formErrors.genre ? (
               <Text style={styles.fieldError}>{formErrors.genre}</Text>
@@ -383,7 +386,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 
           {/* Status picker */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Status *</Text>
+            <Text style={styles.inputLabelHeader}>STATUS *</Text>
             <TouchableOpacity 
               style={[styles.pickerButton, formErrors.status ? styles.inputError : null]}
               onPress={() => setShowStatusPicker(true)}
@@ -392,7 +395,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
               <Text style={status ? styles.pickerValueText : styles.pickerPlaceholderText}>
                 {status || 'Choose status'}
               </Text>
-              <Text style={styles.pickerArrow}>▼</Text>
+              <Text style={styles.pickerArrow}>▾</Text>
             </TouchableOpacity>
             {formErrors.status ? (
               <Text style={styles.fieldError}>{formErrors.status}</Text>
@@ -401,13 +404,16 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 
           {/* Rating */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Rating (0 to 5, optional)</Text>
+            <View style={styles.labelRow}>
+              <Text style={styles.inputLabelHeader}>RATING</Text>
+              <Text style={styles.labelHintText}>0 to 5, optional</Text>
+            </View>
             <TextInput
               style={[styles.input, formErrors.rating ? styles.inputError : null]}
               value={rating}
               onChangeText={handleRatingChange}
               placeholder="e.g. 5"
-              placeholderTextColor={theme.colors.textMuted}
+              placeholderTextColor="#94A3B8"
               keyboardType="number-pad"
             />
             {formErrors.rating ? (
@@ -417,13 +423,16 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 
           {/* Notes */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Notes (max 300 characters, optional)</Text>
+            <View style={styles.labelRow}>
+              <Text style={styles.inputLabelHeader}>NOTES</Text>
+              <Text style={styles.labelHintText}>Max 300 characters, optional</Text>
+            </View>
             <TextInput
               style={[styles.input, styles.multilineInput, formErrors.notes ? styles.inputError : null]}
               value={notes}
               onChangeText={handleNotesChange}
               placeholder="Short personal review or notes"
-              placeholderTextColor={theme.colors.textMuted}
+              placeholderTextColor="#94A3B8"
               multiline
               numberOfLines={3}
             />
@@ -437,12 +446,12 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
             style={styles.addButton}
             onPress={handleAddBook}
             disabled={isSubmitting}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
           >
             {isSubmitting ? (
-              <ActivityIndicator color={theme.colors.white} />
+              <ActivityIndicator color="#FFFFFF" />
             ) : (
-              <Text style={styles.addButtonText}>Add Book</Text>
+              <Text style={styles.addButtonText}>Add Book  →</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -452,50 +461,58 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
           <Text style={styles.sectionTitle}>Filter & Search</Text>
 
           {/* Search box */}
-          <View style={styles.searchContainer}>
-            <Text style={styles.label}>Search</Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabelHeader}>SEARCH BOOKS</Text>
             <TextInput
-              style={styles.searchInput}
+              style={styles.input}
               value={searchText}
               onChangeText={setSearchText}
-              placeholder="Search title or author..."
-              placeholderTextColor={theme.colors.textMuted}
+              placeholder="Search by title or author..."
+              placeholderTextColor="#94A3B8"
             />
           </View>
 
           {/* Genre filter */}
           <View style={styles.filterRowGroup}>
-            <Text style={styles.filterSectionLabel}>Genre filter:</Text>
+            <Text style={styles.inputLabelHeader}>GENRE FILTER</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterPillsContainer}>
-              {['All', ...GENRES].map((g) => (
-                <TouchableOpacity
-                  key={g}
-                  style={[styles.filterPill, selectedGenre === g && styles.filterPillActive]}
-                  onPress={() => setSelectedGenre(g)}
-                >
-                  <Text style={[styles.filterPillText, selectedGenre === g && styles.filterPillTextActive]}>
-                    {g}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              {['All', ...GENRES].map((g) => {
+                const isActive = selectedGenre === g;
+                return (
+                  <TouchableOpacity
+                    key={g}
+                    style={[styles.filterPill, isActive && styles.filterPillActive]}
+                    onPress={() => setSelectedGenre(g)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.filterPillText, isActive && styles.filterPillTextActive]}>
+                      {g}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           </View>
 
           {/* Status filter */}
           <View style={styles.filterRowGroup}>
-            <Text style={styles.filterSectionLabel}>Status filter:</Text>
+            <Text style={styles.inputLabelHeader}>STATUS FILTER</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterPillsContainer}>
-              {['All', ...STATUSES].map((s) => (
-                <TouchableOpacity
-                  key={s}
-                  style={[styles.filterPill, selectedStatus === s && styles.filterPillActive]}
-                  onPress={() => setSelectedStatus(s)}
-                >
-                  <Text style={[styles.filterPillText, selectedStatus === s && styles.filterPillTextActive]}>
-                    {s}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              {['All', ...STATUSES].map((s) => {
+                const isActive = selectedStatus === s;
+                return (
+                  <TouchableOpacity
+                    key={s}
+                    style={[styles.filterPill, isActive && styles.filterPillActive]}
+                    onPress={() => setSelectedStatus(s)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.filterPillText, isActive && styles.filterPillTextActive]}>
+                      {s}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           </View>
 
@@ -505,8 +522,8 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
             <Switch
               value={favoritesOnly}
               onValueChange={setFavoritesOnly}
-              trackColor={{ false: '#CBD5E1', true: theme.colors.primaryLight }}
-              thumbColor={favoritesOnly ? theme.colors.primary : '#F1F5F9'}
+              trackColor={{ false: '#E2E8F0', true: '#0EA5E9' }}
+              thumbColor={favoritesOnly ? '#FFFFFF' : '#F1F5F9'}
             />
           </View>
 
@@ -514,24 +531,25 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
           <TouchableOpacity 
             style={styles.clearButton} 
             onPress={handleClearFilters}
-            activeOpacity={0.7}
+            activeOpacity={0.75}
           >
-            <Text style={styles.clearButtonText}>Clear</Text>
+            <Text style={styles.clearButtonText}>Clear Filters ↺</Text>
           </TouchableOpacity>
 
-          {/* Summary */}
+          {/* Summary Box */}
           <View style={styles.summaryContainer}>
-            <Text style={styles.summaryHeading}>Summary (Currently Shown)</Text>
+            <Text style={styles.summaryHeading}>SUMMARY (CURRENTLY SHOWN)</Text>
+            
             <View style={styles.summaryStatsRow}>
-              <View style={styles.summaryStatItem}>
-                <Text style={styles.summaryStatLabel}>Books:</Text>
+              <View style={styles.summaryStatCard}>
+                <Text style={styles.summaryStatLabel}>Total Books</Text>
                 <Text testID="book-count" style={styles.summaryStatValue}>
                   {summary.totalCount}
                 </Text>
               </View>
-              <View style={styles.summaryStatItem}>
-                <Text style={styles.summaryStatLabel}>Favorites:</Text>
-                <Text testID="favorite-count" style={styles.summaryStatValue}>
+              <View style={styles.summaryStatCard}>
+                <Text style={styles.summaryStatLabel}>Favorites</Text>
+                <Text testID="favorite-count" style={styles.summaryStatValueGold}>
                   {summary.favCount}
                 </Text>
               </View>
@@ -542,8 +560,10 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
               <View style={styles.breakdownList}>
                 {summary.statusList.map((st) => (
                   <View key={st.status} style={styles.breakdownRow}>
-                    <Text style={styles.breakdownStatusName}>{st.status}:</Text>
-                    <Text style={styles.breakdownCount}>{st.count}</Text>
+                    <Text style={styles.breakdownStatusName}>{st.status}</Text>
+                    <View style={styles.breakdownBadge}>
+                      <Text style={styles.breakdownCount}>{st.count}</Text>
+                    </View>
                   </View>
                 ))}
               </View>
@@ -551,14 +571,23 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
           </View>
         </View>
 
-        {/* THE LIST */}
+        {/* THE BOOK LIST */}
         <View style={styles.listSection}>
-          <Text style={styles.sectionTitle}>Books List</Text>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Books List</Text>
+            <Text style={styles.bookListCountText}>
+              {filteredBooks.length} {filteredBooks.length === 1 ? 'book' : 'books'}
+            </Text>
+          </View>
           
           {filteredBooks.length === 0 ? (
             <View style={styles.emptyContainer}>
+              <Text style={styles.emptyIcon}>☁️</Text>
               <Text testID="books-empty" style={styles.emptyText}>
                 No books found
+              </Text>
+              <Text style={styles.emptySubtext}>
+                Try adjusting your search terms or filters above.
               </Text>
             </View>
           ) : (
@@ -568,7 +597,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
                 testID="book-item"
                 style={styles.bookItem}
                 onPress={() => onSelectBook(book.id)}
-                activeOpacity={0.7}
+                activeOpacity={0.8}
               >
                 <View style={styles.bookInfo}>
                   <Text style={styles.bookTitle}>{book.title}</Text>
@@ -578,6 +607,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
                     <View style={styles.genreTag}>
                       <Text style={styles.genreTagText}>{book.genre}</Text>
                     </View>
+                    
                     <View style={[
                       styles.statusTag,
                       book.status === 'To Read' && styles.statusToRead,
@@ -591,6 +621,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
                         book.status === 'Finished' && styles.statusFinishedText,
                       ]}>{book.status}</Text>
                     </View>
+
                     {book.rating !== null && book.rating !== undefined ? (
                       <View style={styles.ratingTag}>
                         <Text style={styles.ratingTagText}>★ {book.rating}/5</Text>
@@ -603,7 +634,7 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
                 <TouchableOpacity
                   style={styles.starButton}
                   onPress={() => toggleFavorite(book.id)}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                   activeOpacity={0.7}
                 >
                   <Text style={[styles.starIcon, book.favorite ? styles.starOn : styles.starOff]}>
@@ -678,298 +709,365 @@ export default function ListScreen({ onNavigate, onSelectBook }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: '#F8FAFC',
   },
   scrollContent: {
-    padding: theme.spacing.md,
+    padding: 16,
     paddingBottom: 40,
   },
   sectionCard: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    marginBottom: theme.spacing.lg,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    marginBottom: 16,
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
     elevation: 2,
   },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.md,
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#0F172A',
+    letterSpacing: -0.4,
+  },
+  sectionCloudBadge: {
+    backgroundColor: '#E0F2FE',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 9999,
+  },
+  sectionCloudBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#0284C7',
+    letterSpacing: 0.5,
   },
   successBox: {
-    backgroundColor: theme.colors.successBg,
-    borderColor: theme.colors.successBorder,
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
     borderWidth: 1,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
-    marginBottom: theme.spacing.md,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
   },
   successText: {
-    color: theme.colors.success,
+    color: '#059669',
     fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
   errorBox: {
-    backgroundColor: theme.colors.errorBg,
-    borderColor: theme.colors.errorBorder,
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
     borderWidth: 1,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
-    marginBottom: theme.spacing.md,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
   },
   errorText: {
-    color: theme.colors.error,
+    color: '#E11D48',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
     textAlign: 'center',
   },
   inputGroup: {
-    marginBottom: theme.spacing.md,
+    marginBottom: 16,
   },
-  label: {
-    fontSize: 13,
+  labelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  inputLabelHeader: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#475569',
+    letterSpacing: 0.6,
+    marginBottom: 8,
+  },
+  labelHintText: {
+    fontSize: 11,
     fontWeight: '600',
-    color: theme.colors.text,
-    marginBottom: 4,
+    color: '#64748B',
   },
   input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: theme.colors.text,
-    backgroundColor: '#FAFAFA',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    fontSize: 15,
+    color: '#0F172A',
+    backgroundColor: '#FFFFFF',
   },
   multilineInput: {
-    minHeight: 65,
+    minHeight: 70,
     textAlignVertical: 'top',
   },
   inputError: {
-    borderColor: theme.colors.error,
-    backgroundColor: theme.colors.errorBg,
+    borderColor: '#E11D48',
+    backgroundColor: '#FFF1F2',
   },
   fieldError: {
-    color: theme.colors.error,
+    color: '#E11D48',
     fontSize: 12,
     marginTop: 4,
+    fontWeight: '600',
   },
   pickerButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 12,
-    backgroundColor: '#FAFAFA',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    backgroundColor: '#FFFFFF',
   },
   pickerPlaceholderText: {
-    color: theme.colors.textMuted,
-    fontSize: 14,
+    color: '#94A3B8',
+    fontSize: 15,
   },
   pickerValueText: {
-    color: theme.colors.text,
-    fontSize: 14,
-    fontWeight: '500',
+    color: '#0F172A',
+    fontSize: 15,
+    fontWeight: '600',
   },
   pickerArrow: {
-    fontSize: 12,
-    color: theme.colors.textSecondary,
+    fontSize: 14,
+    color: '#64748B',
   },
   addButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.sm,
-    paddingVertical: 12,
+    backgroundColor: '#0EA5E9',
+    borderRadius: 14,
+    paddingVertical: 15,
     alignItems: 'center',
-    marginTop: theme.spacing.sm,
+    justifyContent: 'center',
+    marginTop: 6,
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
   },
   addButtonText: {
-    color: theme.colors.white,
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  searchContainer: {
-    marginBottom: theme.spacing.md,
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: theme.colors.text,
-    backgroundColor: '#FAFAFA',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
   filterRowGroup: {
-    marginBottom: theme.spacing.md,
-  },
-  filterSectionLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: theme.colors.textSecondary,
-    marginBottom: 6,
+    marginBottom: 16,
   },
   filterPillsContainer: {
     flexDirection: 'row',
-    gap: 6,
+    gap: 8,
+    paddingVertical: 2,
   },
   filterPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: theme.borderRadius.full,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: '#FAFAFA',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 9999,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#FFFFFF',
   },
   filterPillActive: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
+    backgroundColor: '#0EA5E9',
+    borderColor: '#0EA5E9',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 2,
   },
   filterPillText: {
-    fontSize: 12,
-    color: theme.colors.text,
-    fontWeight: '500',
+    fontSize: 13,
+    color: '#475569',
+    fontWeight: '700',
   },
   filterPillTextActive: {
-    color: theme.colors.white,
-    fontWeight: '700',
+    color: '#FFFFFF',
+    fontWeight: '800',
   },
   switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: theme.spacing.sm,
+    paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-    marginTop: theme.spacing.xs,
+    borderTopColor: '#F1F5F9',
+    marginTop: 4,
   },
   switchLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: theme.colors.text,
+    fontWeight: '700',
+    color: '#0F172A',
   },
   clearButton: {
-    backgroundColor: '#F1F5F9',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingVertical: 8,
+    backgroundColor: '#F0F9FF',
+    borderWidth: 1.5,
+    borderColor: '#BAE6FD',
+    borderRadius: 12,
+    paddingVertical: 11,
     alignItems: 'center',
-    marginTop: theme.spacing.sm,
+    marginTop: 8,
   },
   clearButtonText: {
     fontSize: 13,
-    fontWeight: '600',
-    color: theme.colors.textSecondary,
+    fontWeight: '800',
+    color: '#0284C7',
   },
   summaryContainer: {
-    marginTop: theme.spacing.lg,
-    paddingTop: theme.spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
+    marginTop: 18,
+    paddingTop: 16,
+    borderTopWidth: 1.5,
+    borderTopColor: '#F1F5F9',
   },
   summaryHeading: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.sm,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#64748B',
+    marginBottom: 12,
+    letterSpacing: 0.8,
   },
   summaryStatsRow: {
     flexDirection: 'row',
-    gap: theme.spacing.xl,
-    marginBottom: theme.spacing.sm,
+    gap: 12,
+    marginBottom: 12,
   },
-  summaryStatItem: {
-    flexDirection: 'row',
+  summaryStatCard: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
     alignItems: 'center',
-    gap: 6,
   },
   summaryStatLabel: {
-    fontSize: 14,
-    color: theme.colors.textSecondary,
+    fontSize: 12,
+    color: '#64748B',
+    fontWeight: '700',
+    marginBottom: 2,
   },
   summaryStatValue: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: theme.colors.primary,
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#0EA5E9',
+  },
+  summaryStatValueGold: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#F59E0B',
   },
   breakdownList: {
-    marginTop: theme.spacing.xs,
+    marginTop: 4,
     backgroundColor: '#F8FAFC',
-    borderRadius: theme.borderRadius.sm,
-    padding: theme.spacing.sm,
-    gap: 4,
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    gap: 6,
   },
   breakdownRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 2,
+    alignItems: 'center',
+    paddingVertical: 3,
   },
   breakdownStatusName: {
     fontSize: 13,
-    color: theme.colors.text,
-    fontWeight: '500',
+    color: '#334155',
+    fontWeight: '600',
+  },
+  breakdownBadge: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: 9999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
   breakdownCount: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: theme.colors.text,
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#0284C7',
   },
   listSection: {
-    marginTop: theme.spacing.sm,
+    marginTop: 4,
+  },
+  bookListCountText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#64748B',
   },
   emptyContainer: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.xl,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 32,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+  },
+  emptyIcon: {
+    fontSize: 40,
+    marginBottom: 8,
   },
   emptyText: {
-    fontSize: 15,
-    color: theme.colors.textSecondary,
-    fontWeight: '600',
+    fontSize: 17,
+    color: '#0F172A',
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  emptySubtext: {
+    fontSize: 13,
+    color: '#64748B',
+    textAlign: 'center',
   },
   bookItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    marginBottom: theme.spacing.md,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    marginBottom: 12,
+    shadowColor: '#64748B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
   bookInfo: {
     flex: 1,
-    marginRight: theme.spacing.md,
+    marginRight: 12,
   },
   bookTitle: {
     fontSize: 16,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: 2,
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: 3,
   },
   bookAuthor: {
     fontSize: 13,
-    color: theme.colors.textSecondary,
-    marginBottom: 8,
+    color: '#64748B',
+    marginBottom: 10,
+    fontWeight: '500',
   },
   bookTagsRow: {
     flexDirection: 'row',
@@ -977,26 +1075,29 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   genreTag: {
-    backgroundColor: theme.colors.primaryLight,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   genreTagText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: theme.colors.primary,
+    fontWeight: '700',
+    color: '#334155',
   },
   statusTag: {
     backgroundColor: '#F1F5F9',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
   },
   statusTagText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: theme.colors.textSecondary,
+    fontWeight: '700',
+    color: '#475569',
   },
   statusToRead: {
     backgroundColor: '#E0F2FE',
@@ -1005,83 +1106,91 @@ const styles = StyleSheet.create({
   },
   statusToReadText: {
     color: '#0284C7',
-    fontWeight: '700',
+    fontWeight: '800',
   },
   statusReading: {
-    backgroundColor: '#DBEAFE',
-    borderColor: '#BFDBFE',
+    backgroundColor: '#EEF2FF',
+    borderColor: '#C7D2FE',
     borderWidth: 1,
   },
   statusReadingText: {
-    color: '#1D4ED8',
-    fontWeight: '700',
+    color: '#6366F1',
+    fontWeight: '800',
   },
   statusFinished: {
-    backgroundColor: '#CCFBF1',
-    borderColor: '#99F6E4',
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
     borderWidth: 1,
   },
   statusFinishedText: {
-    color: '#0F766E',
-    fontWeight: '700',
+    color: '#059669',
+    fontWeight: '800',
   },
   ratingTag: {
     backgroundColor: '#FEF3C7',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
   },
   ratingTagText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: '#D97706',
+    fontWeight: '800',
+    color: '#B45309',
   },
   starButton: {
-    padding: 6,
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   starIcon: {
     fontSize: 26,
   },
   starOn: {
-    color: theme.colors.star,
+    color: '#F59E0B',
   },
   starOff: {
     color: '#CBD5E1',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(15, 23, 42, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.lg,
+    padding: 20,
   },
   modalContent: {
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     width: '100%',
     maxWidth: 320,
-    padding: theme.spacing.lg,
-    elevation: 5,
+    padding: 20,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 6,
   },
   modalTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.md,
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: 12,
   },
   modalOption: {
-    paddingVertical: 12,
+    paddingVertical: 13,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: '#F1F5F9',
   },
   modalOptionMuted: {
     fontSize: 14,
-    color: theme.colors.textMuted,
+    color: '#94A3B8',
     fontStyle: 'italic',
   },
   modalOptionText: {
     fontSize: 15,
-    color: theme.colors.text,
-    fontWeight: '500',
+    color: '#0F172A',
+    fontWeight: '600',
   },
 });

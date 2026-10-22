@@ -12,15 +12,18 @@ export default function Header({
   return (
     <View style={styles.container}>
       <View style={styles.brandContainer}>
+        <Text style={styles.brandIcon}>☁️ </Text>
         <Text style={styles.appName}>{title}</Text>
       </View>
 
       <View style={styles.actionsContainer}>
         {user ? (
           <View style={styles.userContainer}>
-            <Text style={styles.userEmail} numberOfLines={1}>
-              {user.email}
-            </Text>
+            <View style={styles.userBadge}>
+              <Text style={styles.userEmail} numberOfLines={1}>
+                {user.email}
+              </Text>
+            </View>
             <TouchableOpacity 
               style={styles.logoutButton} 
               onPress={onLogoutPress}
@@ -61,20 +64,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    backgroundColor: theme.colors.card,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: '#E2E8F0',
+    shadowColor: '#64748B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   brandContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  brandIcon: {
+    fontSize: 20,
+    marginRight: 4,
+  },
   appName: {
     fontSize: 20,
-    fontWeight: '700',
-    color: theme.colors.primary,
+    fontWeight: '900',
+    color: '#0EA5E9',
+    letterSpacing: -0.4,
   },
   actionsContainer: {
     flexDirection: 'row',
@@ -84,52 +97,66 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  userBadge: {
+    backgroundColor: '#F0F9FF',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 9999,
+    marginRight: 8,
+    maxWidth: 145,
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+  },
   userEmail: {
-    fontSize: 13,
-    color: theme.colors.textSecondary,
-    marginRight: theme.spacing.md,
-    maxWidth: 150,
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#0284C7',
   },
   logoutButton: {
-    backgroundColor: theme.colors.errorBg,
-    paddingHorizontal: theme.spacing.md,
+    backgroundColor: '#FFF1F2',
+    paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: 9999,
     borderWidth: 1,
-    borderColor: theme.colors.errorBorder,
+    borderColor: '#FECDD3',
   },
   logoutText: {
-    color: theme.colors.error,
-    fontSize: 13,
-    fontWeight: '600',
+    color: '#E11D48',
+    fontSize: 12,
+    fontWeight: '800',
   },
   authButtons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.sm,
+    gap: 8,
   },
   loginButton: {
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 6,
-    borderRadius: theme.borderRadius.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.white,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 9999,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#FFFFFF',
   },
   loginText: {
-    color: theme.colors.text,
+    color: '#475569',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   registerButton: {
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 6,
-    borderRadius: theme.borderRadius.sm,
-    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 9999,
+    backgroundColor: '#0EA5E9',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
   },
   registerText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '800',
   },
 });

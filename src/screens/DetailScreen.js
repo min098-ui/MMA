@@ -6,9 +6,9 @@ import {
   TouchableOpacity, 
   StyleSheet, 
   ScrollView, 
-  Alert,
-  Modal,
-  ActivityIndicator
+  Alert, 
+  Modal, 
+  ActivityIndicator 
 } from 'react-native';
 import { useBooks } from '../context/BookContext';
 import { theme } from '../styles/theme';
@@ -258,7 +258,7 @@ export default function DetailScreen({ bookId, onBack }) {
     setShowDeleteModal(false);
     try {
       await deleteBook(book.id);
-      onBack(); // Returns to list screen immediately
+      onBack();
     } catch (err) {
       Alert.alert('Error', err.message || 'Could not delete book');
     }
@@ -268,7 +268,7 @@ export default function DetailScreen({ bookId, onBack }) {
     <View style={styles.container}>
       {/* Header bar */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton} activeOpacity={0.7}>
           <Text style={styles.backButtonText}>← Back to List</Text>
         </TouchableOpacity>
         
@@ -276,7 +276,8 @@ export default function DetailScreen({ bookId, onBack }) {
           <TouchableOpacity 
             style={styles.starHeaderButton}
             onPress={() => toggleFavorite(book.id)}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.7}
           >
             <Text style={[styles.starIcon, book.favorite ? styles.starOn : styles.starOff]}>
               {book.favorite ? '★' : '☆'}
@@ -290,7 +291,12 @@ export default function DetailScreen({ bookId, onBack }) {
           {isEditing ? (
             /* EDIT MODE */
             <View>
-              <Text style={styles.cardTitle}>Edit Book</Text>
+              <View style={styles.editHeaderRow}>
+                <Text style={styles.cardTitle}>Edit Book</Text>
+                <View style={styles.cloudBadge}>
+                  <Text style={styles.cloudBadgeText}>☁️ EDITING</Text>
+                </View>
+              </View>
 
               {editError ? (
                 <View style={styles.errorBox}>
@@ -300,12 +306,13 @@ export default function DetailScreen({ bookId, onBack }) {
 
               {/* Title */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Title *</Text>
+                <Text style={styles.inputLabelHeader}>TITLE *</Text>
                 <TextInput
                   style={[styles.input, errors.title ? styles.inputError : null]}
                   value={editTitle}
                   onChangeText={handleTitleChange}
                   placeholder="e.g. Dune"
+                  placeholderTextColor="#94A3B8"
                 />
                 {errors.title ? (
                   <Text style={styles.fieldError}>{errors.title}</Text>
@@ -314,12 +321,13 @@ export default function DetailScreen({ bookId, onBack }) {
 
               {/* Author */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Author *</Text>
+                <Text style={styles.inputLabelHeader}>AUTHOR *</Text>
                 <TextInput
                   style={[styles.input, errors.author ? styles.inputError : null]}
                   value={editAuthor}
                   onChangeText={handleAuthorChange}
                   placeholder="e.g. Frank Herbert"
+                  placeholderTextColor="#94A3B8"
                 />
                 {errors.author ? (
                   <Text style={styles.fieldError}>{errors.author}</Text>
@@ -328,15 +336,16 @@ export default function DetailScreen({ bookId, onBack }) {
 
               {/* Genre Picker */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Genre *</Text>
+                <Text style={styles.inputLabelHeader}>GENRE *</Text>
                 <TouchableOpacity 
                   style={[styles.pickerButton, errors.genre ? styles.inputError : null]}
                   onPress={() => setShowGenrePicker(true)}
+                  activeOpacity={0.7}
                 >
                   <Text style={editGenre ? styles.pickerValueText : styles.pickerPlaceholderText}>
                     {editGenre || 'Choose genre'}
                   </Text>
-                  <Text style={styles.pickerArrow}>▼</Text>
+                  <Text style={styles.pickerArrow}>▾</Text>
                 </TouchableOpacity>
                 {errors.genre ? (
                   <Text style={styles.fieldError}>{errors.genre}</Text>
@@ -345,15 +354,16 @@ export default function DetailScreen({ bookId, onBack }) {
 
               {/* Status Picker */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Status *</Text>
+                <Text style={styles.inputLabelHeader}>STATUS *</Text>
                 <TouchableOpacity 
                   style={[styles.pickerButton, errors.status ? styles.inputError : null]}
                   onPress={() => setShowStatusPicker(true)}
+                  activeOpacity={0.7}
                 >
                   <Text style={editStatus ? styles.pickerValueText : styles.pickerPlaceholderText}>
                     {editStatus || 'Choose status'}
                   </Text>
-                  <Text style={styles.pickerArrow}>▼</Text>
+                  <Text style={styles.pickerArrow}>▾</Text>
                 </TouchableOpacity>
                 {errors.status ? (
                   <Text style={styles.fieldError}>{errors.status}</Text>
@@ -362,12 +372,16 @@ export default function DetailScreen({ bookId, onBack }) {
 
               {/* Rating */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Rating (0 to 5, optional)</Text>
+                <View style={styles.labelRow}>
+                  <Text style={styles.inputLabelHeader}>RATING</Text>
+                  <Text style={styles.labelHintText}>0 to 5, optional</Text>
+                </View>
                 <TextInput
                   style={[styles.input, errors.rating ? styles.inputError : null]}
                   value={editRating}
                   onChangeText={handleRatingChange}
                   placeholder="e.g. 5"
+                  placeholderTextColor="#94A3B8"
                   keyboardType="number-pad"
                 />
                 {errors.rating ? (
@@ -377,12 +391,16 @@ export default function DetailScreen({ bookId, onBack }) {
 
               {/* Notes */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Notes (max 300 characters, optional)</Text>
+                <View style={styles.labelRow}>
+                  <Text style={styles.inputLabelHeader}>NOTES</Text>
+                  <Text style={styles.labelHintText}>Max 300 characters, optional</Text>
+                </View>
                 <TextInput
                   style={[styles.input, styles.multilineInput, errors.notes ? styles.inputError : null]}
                   value={editNotes}
                   onChangeText={handleNotesChange}
                   placeholder="Short personal review or notes"
+                  placeholderTextColor="#94A3B8"
                   multiline
                   numberOfLines={4}
                 />
@@ -397,11 +415,12 @@ export default function DetailScreen({ bookId, onBack }) {
                   style={styles.saveButton} 
                   onPress={handleSaveEdit}
                   disabled={loading}
+                  activeOpacity={0.85}
                 >
                   {loading ? (
-                    <ActivityIndicator color={theme.colors.white} />
+                    <ActivityIndicator color="#FFFFFF" />
                   ) : (
-                    <Text style={styles.saveButtonText}>Save</Text>
+                    <Text style={styles.saveButtonText}>Save Changes  →</Text>
                   )}
                 </TouchableOpacity>
 
@@ -409,6 +428,7 @@ export default function DetailScreen({ bookId, onBack }) {
                   style={styles.cancelButton} 
                   onPress={handleCancelEdit}
                   disabled={loading}
+                  activeOpacity={0.85}
                 >
                   <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
@@ -422,14 +442,14 @@ export default function DetailScreen({ bookId, onBack }) {
 
               <View style={styles.detailRowsContainer}>
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Genre:</Text>
+                  <Text style={styles.detailLabel}>GENRE</Text>
                   <View style={styles.genreTag}>
                     <Text style={styles.genreTagText}>{book.genre}</Text>
                   </View>
                 </View>
 
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Status:</Text>
+                  <Text style={styles.detailLabel}>STATUS</Text>
                   <View style={[
                     styles.statusTag,
                     book.status === 'To Read' && styles.statusToRead,
@@ -446,26 +466,32 @@ export default function DetailScreen({ bookId, onBack }) {
                 </View>
 
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Rating:</Text>
-                  <Text style={styles.detailValue}>
-                    {book.rating !== null && book.rating !== undefined 
-                      ? `★ ${book.rating} / 5` 
-                      : 'Not rated'}
-                  </Text>
+                  <Text style={styles.detailLabel}>RATING</Text>
+                  {book.rating !== null && book.rating !== undefined ? (
+                    <View style={styles.ratingTag}>
+                      <Text style={styles.ratingTagText}>★ {book.rating} / 5</Text>
+                    </View>
+                  ) : (
+                    <Text style={styles.detailValueMuted}>Not rated</Text>
+                  )}
                 </View>
 
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Favorite:</Text>
-                  <Text style={styles.detailValue}>
-                    {book.favorite ? 'Yes (★ Favorited)' : 'No'}
-                  </Text>
+                  <Text style={styles.detailLabel}>FAVORITE</Text>
+                  <View style={[styles.favPill, book.favorite && styles.favPillActive]}>
+                    <Text style={[styles.favPillText, book.favorite && styles.favPillTextActive]}>
+                      {book.favorite ? '★ Favorited' : '☆ Not favorited'}
+                    </Text>
+                  </View>
                 </View>
 
                 <View style={styles.notesContainer}>
-                  <Text style={styles.detailLabel}>Notes:</Text>
-                  <Text style={styles.notesText}>
-                    {book.notes && book.notes.trim() ? book.notes : 'No notes added.'}
-                  </Text>
+                  <Text style={styles.detailLabel}>NOTES</Text>
+                  <View style={styles.notesBox}>
+                    <Text style={styles.notesText}>
+                      {book.notes && book.notes.trim() ? book.notes : 'No notes added yet.'}
+                    </Text>
+                  </View>
                 </View>
               </View>
 
@@ -474,17 +500,17 @@ export default function DetailScreen({ bookId, onBack }) {
                 <TouchableOpacity 
                   style={styles.editButton} 
                   onPress={handleStartEdit}
-                  activeOpacity={0.8}
+                  activeOpacity={0.85}
                 >
-                  <Text style={styles.editButtonText}>Edit</Text>
+                  <Text style={styles.editButtonText}>Edit Book ✎</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity 
                   style={styles.deleteButton} 
                   onPress={() => setShowDeleteModal(true)}
-                  activeOpacity={0.8}
+                  activeOpacity={0.85}
                 >
-                  <Text style={styles.deleteButtonText}>Delete</Text>
+                  <Text style={styles.deleteButtonText}>Delete 🗑</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -504,12 +530,14 @@ export default function DetailScreen({ bookId, onBack }) {
               <TouchableOpacity 
                 style={styles.confirmDeleteButton} 
                 onPress={confirmDelete}
+                activeOpacity={0.85}
               >
                 <Text style={styles.confirmDeleteText}>Delete</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.modalCancelButton} 
                 onPress={() => setShowDeleteModal(false)}
+                activeOpacity={0.85}
               >
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
@@ -580,25 +608,25 @@ export default function DetailScreen({ bookId, onBack }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: '#F8FAFC',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    backgroundColor: theme.colors.card,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: '#E2E8F0',
   },
   backButton: {
     paddingVertical: 6,
   },
   backButtonText: {
     fontSize: 14,
-    color: theme.colors.primary,
-    fontWeight: '600',
+    color: '#0EA5E9',
+    fontWeight: '800',
   },
   starHeaderButton: {
     padding: 6,
@@ -607,87 +635,110 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   starOn: {
-    color: theme.colors.star,
+    color: '#F59E0B',
   },
   starOff: {
     color: '#CBD5E1',
   },
   scrollContent: {
-    padding: theme.spacing.lg,
+    padding: 16,
   },
   card: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 22,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 3,
+  },
+  editHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   cardTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.lg,
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#0F172A',
+    letterSpacing: -0.4,
+  },
+  cloudBadge: {
+    backgroundColor: '#E0F2FE',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 9999,
+  },
+  cloudBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#0284C7',
+    letterSpacing: 0.5,
   },
   viewTitle: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: theme.colors.text,
+    fontSize: 26,
+    fontWeight: '900',
+    color: '#0F172A',
     marginBottom: 4,
+    letterSpacing: -0.4,
   },
   viewAuthor: {
-    fontSize: 16,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.xl,
+    fontSize: 15,
+    color: '#64748B',
+    marginBottom: 20,
+    fontWeight: '500',
   },
   detailRowsContainer: {
-    gap: theme.spacing.md,
-    paddingBottom: theme.spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    marginBottom: theme.spacing.xl,
+    gap: 14,
+    paddingBottom: 20,
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#F1F5F9',
+    marginBottom: 20,
   },
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.md,
   },
   detailLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: theme.colors.textSecondary,
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#64748B',
     width: 80,
+    letterSpacing: 0.6,
   },
-  detailValue: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: theme.colors.text,
+  detailValueMuted: {
+    fontSize: 14,
+    color: '#94A3B8',
+    fontStyle: 'italic',
   },
   genreTag: {
-    backgroundColor: theme.colors.primaryLight,
+    backgroundColor: '#F1F5F9',
     paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   genreTagText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: theme.colors.primary,
+    fontWeight: '700',
+    color: '#334155',
   },
   statusTag: {
     backgroundColor: '#F1F5F9',
     paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
   },
   statusTagText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: theme.colors.textSecondary,
+    fontWeight: '700',
+    color: '#475569',
   },
   statusToRead: {
     backgroundColor: '#E0F2FE',
@@ -696,247 +747,322 @@ const styles = StyleSheet.create({
   },
   statusToReadText: {
     color: '#0284C7',
-    fontWeight: '700',
+    fontWeight: '800',
   },
   statusReading: {
-    backgroundColor: '#DBEAFE',
-    borderColor: '#BFDBFE',
+    backgroundColor: '#EEF2FF',
+    borderColor: '#C7D2FE',
     borderWidth: 1,
   },
   statusReadingText: {
-    color: '#1D4ED8',
-    fontWeight: '700',
+    color: '#6366F1',
+    fontWeight: '800',
   },
   statusFinished: {
-    backgroundColor: '#CCFBF1',
-    borderColor: '#99F6E4',
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
     borderWidth: 1,
   },
   statusFinishedText: {
-    color: '#0F766E',
+    color: '#059669',
+    fontWeight: '800',
+  },
+  ratingTag: {
+    backgroundColor: '#FEF3C7',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+  },
+  ratingTagText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#B45309',
+  },
+  favPill: {
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  favPillActive: {
+    backgroundColor: '#FEF3C7',
+    borderColor: '#FDE68A',
+  },
+  favPillText: {
+    fontSize: 12,
     fontWeight: '700',
+    color: '#64748B',
+  },
+  favPillTextActive: {
+    color: '#B45309',
+    fontWeight: '800',
   },
   notesContainer: {
-    marginTop: theme.spacing.xs,
+    marginTop: 4,
+  },
+  notesBox: {
+    marginTop: 8,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   notesText: {
     fontSize: 14,
-    color: theme.colors.text,
+    color: '#1E293B',
     lineHeight: 22,
-    marginTop: 6,
-    backgroundColor: '#F8FAFC',
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
   },
   viewActionsRow: {
     flexDirection: 'row',
-    gap: theme.spacing.md,
+    gap: 12,
   },
   editButton: {
-    flex: 1,
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 12,
-    borderRadius: theme.borderRadius.sm,
+    flex: 2,
+    backgroundColor: '#0EA5E9',
+    paddingVertical: 15,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 3,
   },
   editButtonText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
   deleteButton: {
     flex: 1,
-    backgroundColor: theme.colors.errorBg,
-    borderWidth: 1,
-    borderColor: theme.colors.errorBorder,
-    paddingVertical: 12,
-    borderRadius: theme.borderRadius.sm,
+    backgroundColor: '#FFF1F2',
+    borderWidth: 1.5,
+    borderColor: '#FECDD3',
+    paddingVertical: 15,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   deleteButtonText: {
-    color: theme.colors.danger,
+    color: '#E11D48',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   inputGroup: {
-    marginBottom: theme.spacing.md,
+    marginBottom: 16,
   },
-  label: {
-    fontSize: 13,
+  labelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  inputLabelHeader: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#475569',
+    letterSpacing: 0.6,
+    marginBottom: 8,
+  },
+  labelHintText: {
+    fontSize: 11,
     fontWeight: '600',
-    color: theme.colors.text,
-    marginBottom: 4,
+    color: '#64748B',
   },
   input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: theme.colors.text,
-    backgroundColor: '#FAFAFA',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    fontSize: 15,
+    color: '#0F172A',
+    backgroundColor: '#FFFFFF',
   },
   multilineInput: {
     minHeight: 80,
     textAlignVertical: 'top',
   },
   inputError: {
-    borderColor: theme.colors.error,
-    backgroundColor: theme.colors.errorBg,
+    borderColor: '#E11D48',
+    backgroundColor: '#FFF1F2',
   },
   fieldError: {
-    color: theme.colors.error,
+    color: '#E11D48',
     fontSize: 12,
     marginTop: 4,
+    fontWeight: '600',
   },
   pickerButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 12,
-    backgroundColor: '#FAFAFA',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    backgroundColor: '#FFFFFF',
   },
   pickerPlaceholderText: {
-    color: theme.colors.textMuted,
-    fontSize: 14,
+    color: '#94A3B8',
+    fontSize: 15,
   },
   pickerValueText: {
-    color: theme.colors.text,
-    fontSize: 14,
-    fontWeight: '500',
+    color: '#0F172A',
+    fontSize: 15,
+    fontWeight: '600',
   },
   pickerArrow: {
-    fontSize: 12,
-    color: theme.colors.textSecondary,
+    fontSize: 14,
+    color: '#64748B',
   },
   editActionRow: {
     flexDirection: 'row',
-    gap: theme.spacing.md,
-    marginTop: theme.spacing.md,
+    gap: 12,
+    marginTop: 10,
   },
   saveButton: {
-    flex: 1,
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 12,
-    borderRadius: theme.borderRadius.sm,
+    flex: 2,
+    backgroundColor: '#0EA5E9',
+    paddingVertical: 15,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 3,
   },
   saveButtonText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: '#F1F5F9',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    paddingVertical: 12,
-    borderRadius: theme.borderRadius.sm,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    paddingVertical: 15,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   cancelButtonText: {
-    color: theme.colors.textSecondary,
+    color: '#64748B',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   errorBox: {
-    backgroundColor: theme.colors.errorBg,
-    borderColor: theme.colors.errorBorder,
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
     borderWidth: 1,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
-    marginBottom: theme.spacing.md,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
   },
   errorText: {
-    color: theme.colors.error,
+    color: '#E11D48',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
+    textAlign: 'center',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(15, 23, 42, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.lg,
+    padding: 20,
   },
   modalContent: {
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     width: '100%',
     maxWidth: 320,
-    padding: theme.spacing.xl,
-    elevation: 5,
+    padding: 22,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 6,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.md,
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: 10,
   },
   confirmDeleteMessage: {
     fontSize: 14,
-    color: theme.colors.textSecondary,
-    lineHeight: 20,
-    marginBottom: theme.spacing.xl,
+    color: '#475569',
+    lineHeight: 21,
+    marginBottom: 20,
   },
   modalActionRow: {
     flexDirection: 'row',
-    gap: theme.spacing.md,
+    gap: 12,
   },
   confirmDeleteButton: {
     flex: 1,
-    backgroundColor: theme.colors.danger,
-    paddingVertical: 10,
-    borderRadius: theme.borderRadius.sm,
+    backgroundColor: '#E11D48',
+    paddingVertical: 12,
+    borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   confirmDeleteText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   modalCancelButton: {
     flex: 1,
-    backgroundColor: '#F1F5F9',
-    paddingVertical: 10,
-    borderRadius: theme.borderRadius.sm,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    paddingVertical: 12,
+    borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   modalCancelText: {
-    color: theme.colors.textSecondary,
+    color: '#64748B',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   modalOption: {
-    paddingVertical: 12,
+    paddingVertical: 13,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: '#F1F5F9',
   },
   modalOptionMuted: {
     fontSize: 14,
-    color: theme.colors.textMuted,
+    color: '#94A3B8',
     fontStyle: 'italic',
   },
   modalOptionText: {
     fontSize: 15,
-    color: theme.colors.text,
-    fontWeight: '500',
+    color: '#0F172A',
+    fontWeight: '600',
   },
   notFoundContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   notFoundText: {
     fontSize: 16,
-    color: theme.colors.textSecondary,
+    color: '#64748B',
+    fontWeight: '600',
   },
 });
