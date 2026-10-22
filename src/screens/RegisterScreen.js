@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { theme } from '../styles/theme';
 
 export default function RegisterScreen({ onNavigate }) {
-  const { register } = useAuth();
+  const { register, logout } = useAuth();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -125,6 +125,7 @@ export default function RegisterScreen({ onNavigate }) {
     setLoading(true);
     try {
       await register(email, password);
+      await logout();
       setSuccessMessage('Registration successful');
     } catch (err) {
       const msg = err.message || 'Registration failed. Please try again.';
